@@ -9,22 +9,6 @@ from scipy.stats import poisson
 
 class BackgroundData(DataFile):
 
-    def MergeBuckets(self, mergeCount):
-        temp = []
-        i = 0
-        counter = 0
-        for index, row in self.dataframe.iterrows():
-            counter = counter + row['events']
-            i = i + 1
-            if i == 10:
-                temp.append(counter)
-                i = 0
-                counter = 0
-        #data ={ "rownr" : temp, "events" : temp }
-        #self.dataframe = pd.DataFrame(data)
-        self.values = temp
-        self.time = np.linspace(0, self.resolution * len(self.values). self.resolution)
-
     def GroupBy(self):
         temp = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0}
         for n in self.values:

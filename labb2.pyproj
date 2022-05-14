@@ -39,11 +39,24 @@
     </Interpreter>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MEJ-background-lang serie.lst" />
-    <Content Include="MEJ-background-serie-2-5-sek.lst" />
-    <Content Include="MEJ-background-serie-3-5-sek.lst" />
-    <Content Include="MEJ-seilver-10 min-serie 2-5 sek.lst" />
-    <Content Include="MEJ-silver-10 min-serie 1.lst" />
+    <Content Include="Datafiles\background-serie1-0.5sek.lst">
+      <Publish>True</Publish>
+    </Content>
+    <Content Include="Datafiles\background-serie2-5sek.lst">
+      <Publish>True</Publish>
+    </Content>
+    <Content Include="Datafiles\background-serie3-5sek.lst">
+      <Publish>True</Publish>
+    </Content>
+    <Content Include="Datafiles\silver-serie2-5sek.lst">
+      <Publish>True</Publish>
+    </Content>
+    <Content Include="Datafiles\silver-serie1-0.5sek.lst">
+      <Publish>True</Publish>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Datafiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
