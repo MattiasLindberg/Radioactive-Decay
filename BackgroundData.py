@@ -10,25 +10,27 @@ from scipy.stats import poisson
 class BackgroundData(DataFile):
 
     def GroupBy(self):
-        t = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+        t = [0, 0, 0, 0, 0, 0, 0, 0, 0 ]
         for n in self.values:
             t[n] = t[n] + 1
         return t
 
+    def GetTotalTime(self):
+        return self.resolution * len(self.time)
 
+    def GetTotalCount(self):
+        return np.sum(self.values)
     
     def PlotWithPoisson(self):
         t = self.GroupBy()
-        s = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        print(t)
+        s = [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
 
         bucketCount = np.sum(t)
 
         plt.bar(s, t, color='slategray')
         mean = self.Mean()
-        k = np.arange(0, 10, 0.2)
+        k = np.arange(0, 8, 0.2)
         d = np.exp(-mean)*np.power(mean, k)/factorial(k)
-        print("Po= ", d)
         d = bucketCount*d
         plt.plot(k, d, 'red')
 

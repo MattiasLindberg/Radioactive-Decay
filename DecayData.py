@@ -42,14 +42,9 @@ class DecayData(DataFile):
 
         
     def AdjustForDecay(self, A, B):
-        print("Adjust A= ", A)
-        print("Adjust B= ", B)
         temp = []
         adjustment = []
 
         adjustment = A + B*np.array(self.time)
         temp = self.values - adjustment
-        print("self.values= ", self.values)
-        print("adjustment= ", adjustment)
-        print("temp= ", temp)
         self.values = temp

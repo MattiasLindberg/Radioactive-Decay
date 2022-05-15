@@ -43,7 +43,11 @@ class DataFile(object):
                 counter = 0
 
         self.resolution = int(mergeCount * self.resolution)
-        print(self.resolution)
-        print(type(self.resolution))
         self.values = temp
         self.time = np.linspace(0, self.resolution * len(self.values), self.resolution)
+
+    def Merge(self, otherDataFile):
+        for value in otherDataFile.values:
+            self.values.append(value)
+        self.time = np.arange(0, self.resolution * len(self.values), self.resolution)
+

@@ -10,15 +10,8 @@ class AnalyserHelper(object):
         sumX = np.array(np.sum(x))
         sumY = np.array(np.sum(y))
         sumXY = np.array(np.sum(x*y))
-        print("sumX= ", sumX)
-        print("sumX2= ", sumX2)
-        print("n= ", n)
         delta = np.float64((n)*np.array(sumX2) - np.power(sumX, 2))
-        print("delta= ", delta)
         A = ( (sumX2*sumY) - (sumX*sumXY) ) / delta
         B = ( ((n)*sumXY) - (sumX*sumY) ) / delta
-
-        print ("Analyze A= ", A)
-        print ("Analyze B= ", B)
 
         return A, B
