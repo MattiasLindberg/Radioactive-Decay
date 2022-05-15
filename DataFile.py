@@ -42,6 +42,8 @@ class DataFile(object):
                 i = 0
                 counter = 0
 
-        self.resolution = mergeCount * self.resolution
+        self.resolution = int(mergeCount * self.resolution)
+        print(self.resolution)
+        print(type(self.resolution))
         self.values = temp
-        self.time = np.linspace(0, self.resolution * len(self.values). self.resolution)
+        self.time = np.linspace(0, self.resolution * len(self.values), self.resolution)

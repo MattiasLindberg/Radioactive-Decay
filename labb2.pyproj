@@ -22,6 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AnalyserHelper.py" />
     <Compile Include="DecayData.py" />
     <Compile Include="BackgroundData.py" />
     <Compile Include="DataFile.py" />

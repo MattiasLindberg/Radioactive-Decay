@@ -10,35 +10,39 @@ from scipy.stats import poisson
 class BackgroundData(DataFile):
 
     def GroupBy(self):
-        temp = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0}
+        t = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
         for n in self.values:
-            temp[n] = temp[n] + 1
-        return temp
+            t[n] = t[n] + 1
+        return t
 
 
     
-    def PlotWithPoisson(self, title):
-        groupDict = self.GroupBy()
-        #agg_df = self.dataframe.groupby('events').agg(['count'])
-        #print(agg_df)
+    def PlotWithPoisson(self):
+        t = self.GroupBy()
+        s = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        print(t)
 
-        fig = plt.figure()
-        ax = fig.add_axes([1,1,1,1])
-        ax.bar(groupDict.keys, groupDict.values)
-        plt.xlabel("Events per 5 seconds")
-        plt.ylabel("Buckets with specific event count")
-        plt.title(title)
+        bucketCount = np.sum(t)
 
+        plt.bar(s, t, color='slategray')
         mean = self.Mean()
-        print("Mean= ", mean)
         k = np.arange(0, 10, 0.2)
         d = np.exp(-mean)*np.power(mean, k)/factorial(k)
-        d = 100*d
-        plt.plot(k, d, 'r')
-        ax.autoscale()
+        print("Po= ", d)
+        d = bucketCount*d
+        plt.plot(k, d, 'red')
 
-        colors = {'Instance with event count':'blue', 'Poisson distribution':'red'}         
+        plt.axvline(x=mean, color='orange', ls='--', lw='4')
+
+        plt.xlabel("Detected events in 5 second interval")
+        plt.ylabel("Buckets with specific event count")
+        titleText = "Distribution of background noice (N={:d})".format(bucketCount)
+        plt.title(titleText)
+
+        avgText = "Average value ({:.1f})".format(mean)
+        colors = {'Buckets with event count':'slategray', 'Poisson distribution':'red', avgText :'orange'}         
         labels = list(colors.keys())
         handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
         plt.legend(handles, labels)
+
         plt.show()
