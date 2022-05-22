@@ -15,11 +15,13 @@ class DecayData(DataFile):
         self.values = temp
 
     def CalculatePoissonErrors(self):
-        #temp = []
-        #for val in self.values:
-        #    temp.append(np.sqrt(val))
-        #self.errors= temp
-        self.errors = np.sqrt(np.abs(self.values))
+        temp = []
+        uncertainty = np.sqrt(len(self.values))
+        print("uncertainty= ", uncertainty)
+        for val in self.values:
+            temp.append(uncertainty)
+        self.errors= temp
+        #self.errors = np.sqrt(np.abs(self.values))
 
     def ScaleByLn(self):
         #temp = []
@@ -52,6 +54,7 @@ class DecayData(DataFile):
 
 
         if showerrorsbars == True:
+            print("errors= ", self.errors[start:stop+1])
             plt.errorbar(self.time[start:stop+1], self.values[start:stop+1], yerr=self.errors[start:stop+1])
 
         plt.plot(self.time[start:stop+1], A + B*np.array(self.time[start:stop+1]), "r")
