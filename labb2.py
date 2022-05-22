@@ -4,8 +4,11 @@ from DecayData import *
 from BackgroundData import *
 from AnalyserHelper import *
 
+
 import matplotlib.pyplot as plt
 
+from scipy.special import factorial
+from scipy.stats import poisson
 
 
 AG_SERIES1_START_LOAD = 78
@@ -249,67 +252,25 @@ print("Half life for 110-Ag (series 2): ", np.log(1/2)/(-lambda_110_2))
 ###################################################
 
 
-
-###################################################
-# Results
-###################################################
 ag = DecayData(AG_SERIES1_FILENAME, AG_SERIES1_RESOLUTION)
 ag.LoadValues(AG_SERIES1_START_LOAD, AG_SERIES1_STOP_LOAD)
 # Merge channels with dwell time 0.5 sec to channels with dwell time 5 sec
 #print(ag110_1.values)
 ag.MergeBuckets(10)
-ag.AdjustWithFixedValuePerSec(bg_mean)
 
-linearvalues = n_108_1 * np.exp(-lambda108_1*ag.time)
-plt.plot(ag.time, linearvalues, "r")
+# we should include bg values in this plot...
+#ag.AdjustWithFixedValuePerSec(bg_mean)
 
-linearvalues = n_110_1 * np.exp(-lambda_110_1*ag.time)
-plt.plot(ag.time, linearvalues, "g")
-
-linearvalues = (n_110_1 * np.exp(-lambda_110_1*ag.time)) + (n_108_1 * np.exp(-lambda108_1*ag.time))
-plt.plot(ag.time, linearvalues, "m")
-
-
-plt.plot(ag.time, ag.values, "b")
-plt.xlabel("Seconds")
-plt.ylabel("Events detected")
-plt.title("Ag decay values with fitted lines for 108-Ag and 110-Ag decay (series 1)")
-
-# plt.plot(self.time[start:stop+1], linearvalues, "r")
-
-colors = {'Events Detected per 5 second interval':'blue', 'Ag-108 decay least square fit':'red', 'Ag-110 decay least square fit':'green', 'Ag-108 and Ag-110 decays combined':'m' }
-labels = list(colors.keys())
-handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
-plt.legend(handles, labels)
-plt.grid(True)
-plt.show()
+ag.PlotMergedDiagram(n_108_1, lambda108_1, n_110_1, lambda_110_1, bg_mean)
+ag.CalculateChi2(n_108_1, lambda108_1, n_110_1, lambda_110_1, bg_mean)
 
 
 
 ag = DecayData(AG_SERIES2_FILENAME, 5)
-ag.LoadValues(20, 141)
-ag.AdjustWithFixedValuePerSec(bg_mean)
+ag.LoadValues(AG_SERIES2_START_LOAD, AG_SERIES2_STOP_LOAD)
 
-linearvalues = n_108_2 * np.exp(-lambda108_2*ag.time)
-plt.plot(ag.time, linearvalues, "r")
+# we should include bg values in this plot...
+#ag.AdjustWithFixedValuePerSec(bg_mean)
 
-linearvalues = n_110_2 * np.exp(-lambda_110_2*ag.time)
-plt.plot(ag.time, linearvalues, "g")
-
-linearvalues = (n_110_2 * np.exp(-lambda_110_2*ag.time)) + (n_108_2 * np.exp(-lambda108_2*ag.time))
-plt.plot(ag.time, linearvalues, "m")
-
-
-plt.plot(ag.time, ag.values, "b")
-plt.xlabel("Seconds")
-plt.ylabel("Events detected")
-plt.title("Ag decay values with fitted lines for 108-Ag and 110-Ag decay (series 2)")
-
-# plt.plot(self.time[start:stop+1], linearvalues, "r")
-
-colors = {'Events Detected per 5 second interval':'blue', 'Ag-108 decay least square fit':'red', 'Ag-110 decay least square fit':'green', 'Ag-108 and Ag-110 decays combined':'m' }
-labels = list(colors.keys())
-handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
-plt.legend(handles, labels)
-plt.grid(True)
-plt.show()
+ag.PlotMergedDiagram(n_108_2, lambda108_2, n_110_2, lambda_110_2, bg_mean)
+ag.CalculateChi2(n_108_2, lambda108_2, n_110_2, lambda_110_2, bg_mean)

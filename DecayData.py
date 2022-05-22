@@ -2,6 +2,7 @@ from DataFile import *
 from itertools import count
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import stats
 
 
 class DecayData(DataFile):
@@ -105,3 +106,50 @@ class DecayData(DataFile):
         adjustment = A + B*np.array(self.time)
         temp = self.values - adjustment
         self.values = temp
+
+    def PlotMergedDiagram(self, n_108, lambda108, n_110, lambda_110, bg_mean):
+        linearvalues = n_108 * np.exp(-lambda108*self.time)
+        plt.plot(self.time, linearvalues, "r")
+
+        linearvalues = n_110 * np.exp(-lambda_110*self.time)
+        plt.plot(self.time, linearvalues, "g")
+
+        linearvalues = bg_mean + (n_110 * np.exp(-lambda_110*self.time)) + (n_108 * np.exp(-lambda108*self.time))
+        plt.plot(self.time, linearvalues, "m")
+
+        plt.axhline(y=bg_mean*5, color='orange', ls='--', lw='1')
+
+        plt.plot(self.time, self.values, "b")
+        plt.xlabel("Seconds")
+        plt.ylabel("Events detected")
+        plt.title("Ag decay values with fitted lines for 108-Ag and 110-Ag decay")
+
+        # plt.plot(self.time[start:stop+1], linearvalues, "r")
+
+        colors = {'Events Detected per 5 second interval':'blue', 'Ag-108 decay least square fit':'red', 'Ag-110 decay least square fit':'green', 'Ag-108 and Ag-110 decays combined':'m' }
+        labels = list(colors.keys())
+        handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
+        plt.legend(handles, labels)
+        plt.grid(True)
+        plt.show()
+
+    def CalculateChi2(self, n_108, lambda108, n_110, lambda_110, bg_mean):
+        linearvalues = bg_mean + (n_110 * np.exp(-lambda_110*self.time)) + (n_108 * np.exp(-lambda108*self.time))
+
+        chi2 = 0
+        variance = 5
+        for index in range(0, len(linearvalues)):
+            diff = np.abs(linearvalues[index] - self.values[index])
+            diff = (diff * diff) / np.sqrt(self.values[index])
+            chi2 = chi2 + diff
+        print("chi2= ", chi2)
+
+        ndof = len(self.time) - 5
+        print("ndof= ", ndof)
+        p = 1 - stats.chi2.cdf(chi2, ndof)
+        print("p= ", p)
+
+        chi2tilde = chi2 / ndof
+        print("chi2tilde= ", chi2tilde)
+        
+
