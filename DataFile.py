@@ -1,6 +1,4 @@
-from itertools import count
 import numpy as np
-import pandas as pd
 
 
 class DataFile(object):
@@ -44,7 +42,7 @@ class DataFile(object):
 
         self.resolution = int(mergeCount * self.resolution)
         self.values = temp
-        self.time = np.linspace(0, self.resolution * len(self.values), self.resolution)
+        self.time = np.linspace(start=0, stop=self.resolution * len(self.values), num=len(self.values))
 
     def Merge(self, otherDataFile):
         for value in otherDataFile.values:

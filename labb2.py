@@ -1,35 +1,65 @@
+from tkinter import TRUE
 from DataFile import *
 from DecayData import *
 from BackgroundData import *
 from AnalyserHelper import *
 
 import matplotlib.pyplot as plt
-import pandas as pd
-from scipy.special import factorial
-from scipy.stats import poisson
+
+
+
+AG_SERIES1_START_LOAD = 78
+AG_SERIES1_STOP_LOAD = 1198
+AG_SERIES1_RESOLUTION = 0.5
+AG_SERIES1_FILENAME = ".\\Datafiles\\silver-serie1-0.5sek.lst"
+
+AG_SERIES2_START_LOAD = 20
+AG_SERIES2_STOP_LOAD = 172
+AG_SERIES2_RESOLUTION = 5
+AG_SERIES2_FILENAME = ".\\Datafiles\\silver-serie2-5sek.lst"
+
+BG_SERIES1_START_LOAD = 10
+BG_SERIES1_STOP_LOAD = 1020
+BG_SERIES1_RESOLUTION = 0.5
+BG_SERIES1_FILENAME = ".\\Datafiles\\background-serie1-0.5sek.lst"
+
+BG_SERIES2_START_LOAD = 10
+BG_SERIES2_STOP_LOAD = 122
+BG_SERIES2_RESOLUTION = 5
+BG_SERIES2_FILENAME = ".\\Datafiles\\background-serie2-5sek.lst"
+
+BG_SERIES3_START_LOAD = 10
+BG_SERIES3_STOP_LOAD = 89
+BG_SERIES3_RESOLUTION = 5
+BG_SERIES3_FILENAME = ".\\Datafiles\\background-serie3-5sek.lst"
 
 # Load data for background noice
 
 ###################################################
 # Task 2: Plot background noice
 ###################################################
-bg1 = BackgroundData(".\\Datafiles\\background-serie1-0.5sek.lst", 0.5)
-bg1.LoadValues(10, 1020)
+bg1 = BackgroundData(BG_SERIES1_FILENAME, BG_SERIES1_RESOLUTION)
+bg1.LoadValues(BG_SERIES1_START_LOAD, BG_SERIES1_STOP_LOAD)
+# Merge channels with dwell time 0.5 sec to channels with dwell time 5 sec
 bg1.MergeBuckets(10)
+# Figure 2
 #bg1.PlotWithPoisson()
 
-bg2 = BackgroundData(".\\Datafiles\\background-serie2-5sek.lst", 5)
-bg2.LoadValues(10, 122)
+bg2 = BackgroundData(BG_SERIES2_FILENAME, BG_SERIES2_RESOLUTION)
+bg2.LoadValues(BG_SERIES2_START_LOAD, BG_SERIES2_STOP_LOAD)
+# Figure 3
 #bg2.PlotWithPoisson()
 
-bg3 = BackgroundData(".\\Datafiles\\background-serie3-5sek.lst", 5)
-bg3.LoadValues(10, 89)
+bg3 = BackgroundData(BG_SERIES3_FILENAME, BG_SERIES3_RESOLUTION)
+bg3.LoadValues(BG_SERIES3_START_LOAD, BG_SERIES3_STOP_LOAD)
+# Figure 4
 #bg3.PlotWithPoisson()
 
-bg4 = BackgroundData(".\\Datafiles\\background-serie3-5sek.lst", 5)
-bg4.LoadValues(10, 89)
+bg4 = BackgroundData(BG_SERIES3_FILENAME, BG_SERIES3_RESOLUTION)
+bg4.LoadValues(BG_SERIES3_START_LOAD, BG_SERIES3_STOP_LOAD)
 bg4.Merge(bg1)
 bg4.Merge(bg2)
+# Figure 5
 #bg4.PlotWithPoisson()
 
 
@@ -40,40 +70,61 @@ bg4.Merge(bg2)
 # bg4 has all measurements for background noice,
 # so it can be used to calculate the average value
 bg_mean = bg4.Mean() / bg4.resolution
-print("Average number of background events per 5 second period= ", bg_mean)
+print("Average number of background events per second= ", bg_mean)
 
-bg1 = BackgroundData(".\\Datafiles\\background-serie1-0.5sek.lst", 0.5)
-bg1.LoadValues(10, 1020)
+bg1 = BackgroundData(BG_SERIES1_FILENAME, BG_SERIES1_RESOLUTION)
+bg1.LoadValues(BG_SERIES1_START_LOAD, BG_SERIES1_STOP_LOAD)
 totalCount = bg1.GetTotalCount()
 totalTime = bg1.GetTotalTime()
-print("Background series 1: totalCount= ",totalCount, ", totalTime= ", totalTime, ", average= ", totalCount/totalTime)
+print("Background series 1: totalCount= ",totalCount, ", totalTime= ", totalTime, ", average= ", totalCount/totalTime, "uncertainty= ", np.sqrt(totalCount/totalTime))
 
-bg2 = BackgroundData(".\\Datafiles\\background-serie2-5sek.lst", 5)
-bg2.LoadValues(10, 122)
+bg2 = BackgroundData(BG_SERIES2_FILENAME, BG_SERIES2_RESOLUTION)
+bg2.LoadValues(BG_SERIES2_START_LOAD, BG_SERIES2_STOP_LOAD)
 totalCount = bg2.GetTotalCount()
 totalTime = bg2.GetTotalTime()
-print("Background series 2: totalCount= ",totalCount, ", totalTime= ", totalTime, ", average= ", totalCount/totalTime)
+print("Background series 2: totalCount= ",totalCount, ", totalTime= ", totalTime, ", average= ", totalCount/totalTime, "uncertainty= ", np.sqrt(totalCount/totalTime))
 
-bg3 = BackgroundData(".\\Datafiles\\background-serie3-5sek.lst", 5)
-bg3.LoadValues(10, 89)
+bg3 = BackgroundData(BG_SERIES3_FILENAME, BG_SERIES3_RESOLUTION)
+bg3.LoadValues(BG_SERIES3_START_LOAD, BG_SERIES3_STOP_LOAD)
 totalCount = bg3.GetTotalCount()
 totalTime = bg3.GetTotalTime()
-print("Background series 3: totalCount= ",totalCount, ", totalTime= ", totalTime, ", average= ", totalCount/totalTime)
+print("Background series 3: totalCount= ",totalCount, ", totalTime= ", totalTime, ", average= ", totalCount/totalTime, "uncertainty= ", np.sqrt(totalCount/totalTime))
 
 totalCount = bg4.GetTotalCount()
 totalTime = bg4.GetTotalTime()
-print("Full background series: totalCount= ",totalCount, ", totalTime= ", totalTime, ", average= ", totalCount/totalTime)
+print("Full background series: totalCount= ",totalCount, ", totalTime= ", totalTime, ", average= ", totalCount/totalTime, "uncertainty= ", np.sqrt(totalCount/totalTime))
 
 ###################################################
 # Task 4: Adjust decay speed for Ag
 ###################################################
 print("Task 4")
-ag108 = DecayData(".\\Datafiles\\silver-serie2-5sek.lst", 5)
-ag108.LoadValues(20, 172)
-ag108.AdjustWithFixedValuePerSec(bg_mean)
-ag108.CalculatePoissonErrors()
 
-print("Ag decay adjusted for background noice, to be used in task 6: ", ag108.values)
+print("AG SERIES 1")
+ag108_1 = DecayData(AG_SERIES1_FILENAME, AG_SERIES1_RESOLUTION)
+ag108_1.LoadValues(AG_SERIES1_START_LOAD, AG_SERIES1_STOP_LOAD)
+# Merge channels with dwell time 0.5 sec to channels with dwell time 5 sec
+print(ag108_1.values)
+ag108_1.MergeBuckets(10)
+ag108_1.AdjustWithFixedValuePerSec(bg_mean)
+ag108_1.CalculatePoissonErrors()
+
+temp = np.array(ag108_1.values) / 5
+print(ag108_1.values)
+print("Ag count rate adjusted for background noice (events/sec): ", temp[0:4])
+print("Uncertaintiy for Ag count rate adjusted for background noice (events/sec): ", np.sqrt(temp[0:4]))
+
+
+print("AG SERIES 2")
+ag108_2 = DecayData(AG_SERIES2_FILENAME, 5)
+ag108_2.LoadValues(AG_SERIES2_START_LOAD, AG_SERIES2_STOP_LOAD)
+ag108_2.AdjustWithFixedValuePerSec(bg_mean)
+ag108_2.CalculatePoissonErrors()
+
+temp = np.array(ag108_2.values) / 5
+print(ag108_2.values)
+print("Ag count rate adjusted for background noice (events/sec): ", temp[0:4])
+print("Uncertaintiy for Ag count rate adjusted for background noice (events/sec): ", np.sqrt(temp[0:4]))
+
 
 ###################################################
 # Task 5: Plot Ag decay and determine constants 
@@ -81,19 +132,39 @@ print("Ag decay adjusted for background noice, to be used in task 6: ", ag108.va
 ###################################################
 print("Task 5")
 
-ag108.ScaleByLn()
-A, B = AnalyserHelper.LeastSquareFit(ag108, 24, 120)
-lambda_108 = -B
-n_108 = np.exp(A)
-#print(n_1, lambda_1)
-ag108.PlotWithLinearFit("Decay values and linear fit for 108-Ag", A, B, 24, 120)
+ag108_1.ScaleByLn()
+A108_1, B108_1 = AnalyserHelper.LeastSquareFit(ag108_1, 24, 110)
+lambda108_1 = -B108_1
+n_108_1 = np.exp(A108_1)
+print("lambda108_1= ", lambda108_1)
+print("n_108_1= ", n_108_1)
 
-ag108.ScaleByExp()
-ag108.CalculatePoissonErrors()
-ag108.PlotWithExpLinearFit("Decay values and linear fit for 108-Ag", A, B, 24, 120)
+#ag108_1.PlotWithLinearFit("Decay values and linear fit for 108-Ag (series 1)", A108_1, B108_1, 24, 110, True, False)
 
-ag108_values = n_108 * np.exp(-lambda_108*ag108.time)
-print("108-Ag decay values to be corrected for in task 6: ", ag108_values)
+ag108_1.ScaleByExp()
+ag108_1.CalculatePoissonErrors()
+#ag108_1.PlotWithExpLinearFit("Decay values and linear fit for 108-Ag (series 1)", A108_1, B108_1, 24, 110, False, True)
+
+ag108_values_1 = n_108_1 * np.exp(-lambda108_1*ag108_1.time)
+print("108-Ag decay values (series 1) to be corrected for in task 6: ", ag108_values_1)
+
+
+ag108_2.ScaleByLn()
+A108_2, B108_2 = AnalyserHelper.LeastSquareFit(ag108_2, 24, 110)
+lambda108_2 = -B108_2
+n_108_2 = np.exp(A108_2)
+print("lambda108_2= ", lambda108_2)
+print("n_108_2= ", n_108_2)
+
+# Figure 6
+#ag108_2.PlotWithLinearFit("Decay values and linear fit for 108-Ag (series 2)", A108_2, B108_2, 24, 120, True, False)
+
+ag108_2.ScaleByExp()
+ag108_2.CalculatePoissonErrors()
+#ag108_2.PlotWithExpLinearFit("Decay values and linear fit for 108-Ag (series 2)", A108_2, B108_2, 24, 120, False, True)
+
+ag108_values_2 = n_108_2 * np.exp(-lambda108_2*ag108_2.time)
+print("108-Ag decay values (series 2) to be corrected for in task 6: ", ag108_values_2)
 
 ###################################################
 # Task 6: Plot Ag decay and determine constants 
@@ -101,45 +172,142 @@ print("108-Ag decay values to be corrected for in task 6: ", ag108_values)
 ###################################################
 print("Task 6")
 
-ag110 = DecayData(".\\Datafiles\\silver-serie2-5sek.lst", 5)
-ag110.LoadValues(20, 141)
-ag110.AdjustWithFixedValuePerSec(bg_mean)
-ag110.values = ag110.values - ag108_values[0:len(ag110.values)]
-print("110-Ag decay values to be added to table: ", ag110.values)
-ag110.CalculatePoissonErrors()
-ag110.ScaleByLn()
-# ag110.AdjustForDecay(A, B)
-A, B = AnalyserHelper.LeastSquareFit(ag110, 1, 23)
-lambda_110 = -B
-n_110 = np.exp(A)
+ag110_1 = DecayData(AG_SERIES1_FILENAME, AG_SERIES1_RESOLUTION)
+ag110_1.LoadValues(AG_SERIES1_START_LOAD, AG_SERIES1_STOP_LOAD)
+# Merge channels with dwell time 0.5 sec to channels with dwell time 5 sec
+#print(ag110_1.values)
+ag110_1.MergeBuckets(10)
+ag110_1.AdjustWithFixedValuePerSec(bg_mean)
+ag110_1.values = ag110_1.values - ag108_values_1[0:len(ag110_1.values)]
+#print("110-Ag decay values to be added to table (series 1): ", ag110_1.values)
+ag110_1.CalculatePoissonErrors()
+ag110_1.ScaleByLn()
+A110_1, B110_1 = AnalyserHelper.LeastSquareFit(ag110_1, 1, 20)
+lambda_110_1 = -B110_1
+n_110_1 = np.exp(A110_1)
+print("lambda_110_1= ", lambda_110_1)
+print("n_110_1= ", n_110_1)
 
-ag110.PlotWithLinearFit("Decay values and linear fit for 110-Ag", A, B, 1, 23)
+#ag110_1.PlotWithLinearFit("Decay values and linear fit for 110-Ag (series 1)", A110_1, B110_1, 1, 23, True, False)
 
-ag110.ScaleByExp()
-ag110.CalculatePoissonErrors()
-ag110.PlotWithExpLinearFit("Decay values and liner fit for 110-Ag", A, B, 1, 23)
+ag110_1.ScaleByExp()
+ag110_1.CalculatePoissonErrors()
+#ag110_1.PlotWithExpLinearFit("Decay values and liner fit for 110-Ag (series 1)", A110_1, B110_1, 1, 23, False, True)
+
+
+ag110_1_values = n_110_1 * np.exp(-lambda_110_1*ag108_1.time)
+ag108_1.values = ag108_1.values - ag110_1_values[0:len(ag108_1.values)]
+
+#print("ag110_1.values = ", ag110_1.values )
+#print("ag108_1.values = ", ag108_1.values )
+#print("ag110_1_values= ", ag110_1_values)
+
+ag108_1.PlotWithExpLinearFit("Decay values and linear fit for 108-Ag (series 1)", A108_2, B108_2, 24, 120, False, True)
+
+
+
+
+ag110_2 = DecayData(AG_SERIES2_FILENAME, 5)
+ag110_2.LoadValues(20, 141)
+ag110_2.AdjustWithFixedValuePerSec(bg_mean)
+ag110_2.values = ag110_2.values - ag108_values_2[0:len(ag110_2.values)]
+#print("110-Ag decay values to be added to table (series 2): ", ag110_2.values)
+ag110_2.CalculatePoissonErrors()
+ag110_2.ScaleByLn()
+# ag110_2.AdjustForDecay(A, B)
+A110_2, B110_2 = AnalyserHelper.LeastSquareFit(ag110_2, 1, 23)
+lambda_110_2 = -B110_2
+n_110_2 = np.exp(A110_2)
+print("lambda_110_2= ", lambda_110_2)
+print("n_110_2= ", n_110_2)
+
+ag110_2.PlotWithLinearFit("Decay values and linear fit for 110-Ag (series 2)", A110_2, B110_2, 1, 23, True, False)
+
+ag110_2.ScaleByExp()
+ag110_2.CalculatePoissonErrors()
+ag110_2.PlotWithExpLinearFit("Decay values and liner fit for 110-Ag (series 2)", A110_2, B110_2, 1, 23, False, True)
+
+
+ag110_2_values = n_110_2 * np.exp(-lambda_110_2*ag108_2.time)
+ag108_2.values = ag108_2.values - ag110_2_values[0:len(ag108_2.values)]
+ag108_2.PlotWithExpLinearFit("Decay values and linear fit for 108-Ag (series 2)", A108_2, B108_2, 24, 120, False, True)
 
 ###################################################
-# Task 6: Results
+# Task 7: Half life
 ###################################################
-ag = DecayData(".\\Datafiles\\silver-serie2-5sek.lst", 5)
-ag.LoadValues(20, 141)
+print("Task 7: Half life")
+
+print("Half life for 108-Ag (series 1): ", np.log(1/2)/(-lambda108_1))
+print("Half life for 110-Ag (series 1): ", np.log(1/2)/(-lambda_110_1))
+
+print("Half life for 108-Ag (series 2): ", np.log(1/2)/(-lambda108_2))
+print("Half life for 110-Ag (series 2): ", np.log(1/2)/(-lambda_110_2))
+
+
+###################################################
+# Task 8: Chi^2 test
+###################################################
+
+
+
+###################################################
+# Results
+###################################################
+ag = DecayData(AG_SERIES1_FILENAME, AG_SERIES1_RESOLUTION)
+ag.LoadValues(AG_SERIES1_START_LOAD, AG_SERIES1_STOP_LOAD)
+# Merge channels with dwell time 0.5 sec to channels with dwell time 5 sec
+#print(ag110_1.values)
+ag.MergeBuckets(10)
 ag.AdjustWithFixedValuePerSec(bg_mean)
 
-linearvalues = n_108 * np.exp(-lambda_108*ag.time)
+linearvalues = n_108_1 * np.exp(-lambda108_1*ag.time)
 plt.plot(ag.time, linearvalues, "r")
 
-linearvalues = n_110 * np.exp(-lambda_110*ag.time)
+linearvalues = n_110_1 * np.exp(-lambda_110_1*ag.time)
 plt.plot(ag.time, linearvalues, "g")
+
+linearvalues = (n_110_1 * np.exp(-lambda_110_1*ag.time)) + (n_108_1 * np.exp(-lambda108_1*ag.time))
+plt.plot(ag.time, linearvalues, "m")
+
 
 plt.plot(ag.time, ag.values, "b")
 plt.xlabel("Seconds")
 plt.ylabel("Events detected")
-plt.title("Ag decay values with fitted lines for 108-Ag and 110-Ag decay")
+plt.title("Ag decay values with fitted lines for 108-Ag and 110-Ag decay (series 1)")
 
 # plt.plot(self.time[start:stop+1], linearvalues, "r")
 
-colors = {'Events Detected per 5 second interval':'blue', 'Ag-108 decay least square fit':'red', 'Ag-110 decay least square fit':'green' }         
+colors = {'Events Detected per 5 second interval':'blue', 'Ag-108 decay least square fit':'red', 'Ag-110 decay least square fit':'green', 'Ag-108 and Ag-110 decays combined':'m' }
+labels = list(colors.keys())
+handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
+plt.legend(handles, labels)
+plt.grid(True)
+plt.show()
+
+
+
+ag = DecayData(AG_SERIES2_FILENAME, 5)
+ag.LoadValues(20, 141)
+ag.AdjustWithFixedValuePerSec(bg_mean)
+
+linearvalues = n_108_2 * np.exp(-lambda108_2*ag.time)
+plt.plot(ag.time, linearvalues, "r")
+
+linearvalues = n_110_2 * np.exp(-lambda_110_2*ag.time)
+plt.plot(ag.time, linearvalues, "g")
+
+linearvalues = (n_110_2 * np.exp(-lambda_110_2*ag.time)) + (n_108_2 * np.exp(-lambda108_2*ag.time))
+plt.plot(ag.time, linearvalues, "m")
+
+
+plt.plot(ag.time, ag.values, "b")
+plt.xlabel("Seconds")
+plt.ylabel("Events detected")
+plt.title("Ag decay values with fitted lines for 108-Ag and 110-Ag decay (series 2)")
+
+# plt.plot(self.time[start:stop+1], linearvalues, "r")
+
+colors = {'Events Detected per 5 second interval':'blue', 'Ag-108 decay least square fit':'red', 'Ag-110 decay least square fit':'green', 'Ag-108 and Ag-110 decays combined':'m' }
 labels = list(colors.keys())
 handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
 plt.legend(handles, labels)

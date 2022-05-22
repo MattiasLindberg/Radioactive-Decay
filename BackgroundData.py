@@ -1,10 +1,7 @@
 from DataFile import *
 from itertools import count
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-from scipy.special import factorial
-from scipy.stats import poisson
 
 
 class BackgroundData(DataFile):

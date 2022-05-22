@@ -1,10 +1,7 @@
 from DataFile import *
 from itertools import count
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-from scipy.special import factorial
-from scipy.stats import poisson
 
 
 class DecayData(DataFile):
@@ -43,13 +40,18 @@ class DecayData(DataFile):
             temp.append(np.exp(val))
         self.values = temp
 
-    def PlotWithLinearFit(self, title, A, B, start, stop):
-        plt.plot(self.time, self.values, "b")
-        plt.xlabel("Seconds")
-        plt.ylabel("Events detected")
+    def PlotWithLinearFit(self, title, A, B, start, stop, showerrorsbars, logornot):
+        plt.plot(self.time[start:stop+1], self.values[start:stop+1], "b")
         plt.title(title)
+        plt.xlabel("Seconds")
+        if logornot == True:
+            plt.ylabel("Events detected ( log(n) )")
+        else:
+            plt.ylabel("Events detected")
 
-        plt.errorbar(self.time, self.values, yerr=self.errors)
+
+        if showerrorsbars == True:
+            plt.errorbar(self.time[start:stop+1], self.values[start:stop+1], yerr=self.errors[start:stop+1])
 
         plt.plot(self.time[start:stop+1], A + B*np.array(self.time[start:stop+1]), "r")
         # plt.plot(self.time, A + B*np.array(self.time), "r")
@@ -61,9 +63,11 @@ class DecayData(DataFile):
         plt.grid(True)
         plt.show()
 
-    def PlotWithExpLinearFit(self, title, A, B, start, stop):
+    def PlotWithExpLinearFit(self, title, A, B, start, stop, showerrorsbars, logornot):
         lambda_1 = -B
         n_1 = np.exp(A)
+        print("lambda in plot=", lambda_1)
+        print("n in plot=", n_1)
         # linearvalues = n_1 * np.exp(-lambda_1*self.time[start:stop+1])
         linearvalues = n_1 * np.exp(-lambda_1*self.time)
 
@@ -73,11 +77,15 @@ class DecayData(DataFile):
 
         fig = plt.figure()
         plt.plot(self.time, self.values, "b")
-        plt.xlabel("Seconds")
-        plt.ylabel("Events detected")
         plt.title(title)
+        plt.xlabel("Seconds")
+        if logornot == True:
+            plt.ylabel("Events detected ( log(n) )")
+        else:
+            plt.ylabel("Events detected")
 
-        plt.errorbar(self.time, self.values, yerr=self.errors)
+        if showerrorsbars == True:
+            plt.errorbar(self.time, self.values, yerr=self.errors)
 
         # plt.plot(self.time[start:stop+1], linearvalues, "r")
         plt.plot(self.time, linearvalues, "r")
