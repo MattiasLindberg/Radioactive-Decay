@@ -106,8 +106,9 @@ print("AG SERIES 1")
 ag108_1 = DecayData(AG_SERIES1_FILENAME, AG_SERIES1_RESOLUTION)
 ag108_1.LoadValues(AG_SERIES1_START_LOAD, AG_SERIES1_STOP_LOAD)
 # Merge channels with dwell time 0.5 sec to channels with dwell time 5 sec
-print(ag108_1.values)
+print("before= ", ag108_1.values)
 ag108_1.MergeBuckets(10)
+print("after= ", ag108_1.values)
 ag108_1.AdjustWithFixedValuePerSec(bg_mean)
 ag108_1.CalculatePoissonErrors()
 
@@ -135,6 +136,7 @@ print("Uncertaintiy for Ag count rate adjusted for background noice (events/sec)
 ###################################################
 print("Task 5")
 
+print("AG SERIES 1")
 ag108_1.ScaleByLn()
 A108_1, B108_1 = AnalyserHelper.LeastSquareFit(ag108_1, 24, 110)
 lambda108_1 = -B108_1
@@ -142,7 +144,8 @@ n_108_1 = np.exp(A108_1)
 print("lambda108_1= ", lambda108_1)
 print("n_108_1= ", n_108_1)
 
-#ag108_1.PlotWithLinearFit("Decay values and linear fit for 108-Ag (series 1)", A108_1, B108_1, 24, 110, True, False)
+# Figure 6
+ag108_1.PlotWithLinearFit("Decay values and linear fit for 108-Ag (series 1)", A108_1, B108_1, 24, 110, True, False)
 
 ag108_1.ScaleByExp()
 ag108_1.CalculatePoissonErrors()
@@ -152,6 +155,7 @@ ag108_values_1 = n_108_1 * np.exp(-lambda108_1*ag108_1.time)
 print("108-Ag decay values (series 1) to be corrected for in task 6: ", ag108_values_1)
 
 
+print("AG SERIES 2")
 ag108_2.ScaleByLn()
 A108_2, B108_2 = AnalyserHelper.LeastSquareFit(ag108_2, 24, 110)
 lambda108_2 = -B108_2
@@ -160,7 +164,7 @@ print("lambda108_2= ", lambda108_2)
 print("n_108_2= ", n_108_2)
 
 # Figure 6
-#ag108_2.PlotWithLinearFit("Decay values and linear fit for 108-Ag (series 2)", A108_2, B108_2, 24, 120, True, False)
+ag108_2.PlotWithLinearFit("Decay values and linear fit for 108-Ag (series 2)", A108_2, B108_2, 24, 120, True, False)
 
 ag108_2.ScaleByExp()
 ag108_2.CalculatePoissonErrors()
@@ -175,6 +179,8 @@ print("108-Ag decay values (series 2) to be corrected for in task 6: ", ag108_va
 ###################################################
 print("Task 6")
 
+print("AG SERIES 1")
+
 ag110_1 = DecayData(AG_SERIES1_FILENAME, AG_SERIES1_RESOLUTION)
 ag110_1.LoadValues(AG_SERIES1_START_LOAD, AG_SERIES1_STOP_LOAD)
 # Merge channels with dwell time 0.5 sec to channels with dwell time 5 sec
@@ -182,7 +188,7 @@ ag110_1.LoadValues(AG_SERIES1_START_LOAD, AG_SERIES1_STOP_LOAD)
 ag110_1.MergeBuckets(10)
 ag110_1.AdjustWithFixedValuePerSec(bg_mean)
 ag110_1.values = ag110_1.values - ag108_values_1[0:len(ag110_1.values)]
-#print("110-Ag decay values to be added to table (series 1): ", ag110_1.values)
+print("110-Ag decay values to be added to table (series 1): ", ag110_1.values[0:10])
 ag110_1.CalculatePoissonErrors()
 ag110_1.ScaleByLn()
 A110_1, B110_1 = AnalyserHelper.LeastSquareFit(ag110_1, 1, 20)
@@ -191,30 +197,26 @@ n_110_1 = np.exp(A110_1)
 print("lambda_110_1= ", lambda_110_1)
 print("n_110_1= ", n_110_1)
 
-#ag110_1.PlotWithLinearFit("Decay values and linear fit for 110-Ag (series 1)", A110_1, B110_1, 1, 23, True, False)
+ag110_1.PlotWithLinearFit("Decay values and linear fit for 110-Ag (series 1)", A110_1, B110_1, 1, 23, True, False)
 
 ag110_1.ScaleByExp()
 ag110_1.CalculatePoissonErrors()
-#ag110_1.PlotWithExpLinearFit("Decay values and liner fit for 110-Ag (series 1)", A110_1, B110_1, 1, 23, False, True)
+ag110_1.PlotWithExpLinearFit("Decay values and liner fit for 110-Ag (series 1)", A110_1, B110_1, 1, 23, False, True)
 
 
 ag110_1_values = n_110_1 * np.exp(-lambda_110_1*ag108_1.time)
 ag108_1.values = ag108_1.values - ag110_1_values[0:len(ag108_1.values)]
 
-#print("ag110_1.values = ", ag110_1.values )
-#print("ag108_1.values = ", ag108_1.values )
-#print("ag110_1_values= ", ag110_1_values)
-
-ag108_1.PlotWithExpLinearFit("Decay values and linear fit for 108-Ag (series 1)", A108_2, B108_2, 24, 120, False, True)
+ag108_1.PlotWithExpLinearFit("Decay values and linear fit for 108-Ag (series 1)", A108_1, B108_1, 24, 120, False, False)
 
 
 
-
+print("AG SERIES 2")
 ag110_2 = DecayData(AG_SERIES2_FILENAME, 5)
 ag110_2.LoadValues(20, 141)
 ag110_2.AdjustWithFixedValuePerSec(bg_mean)
 ag110_2.values = ag110_2.values - ag108_values_2[0:len(ag110_2.values)]
-#print("110-Ag decay values to be added to table (series 2): ", ag110_2.values)
+print("110-Ag decay values to be added to table (series 2): ", ag110_2.values[0:10])
 ag110_2.CalculatePoissonErrors()
 ag110_2.ScaleByLn()
 # ag110_2.AdjustForDecay(A, B)
@@ -233,7 +235,7 @@ ag110_2.PlotWithExpLinearFit("Decay values and liner fit for 110-Ag (series 2)",
 
 ag110_2_values = n_110_2 * np.exp(-lambda_110_2*ag108_2.time)
 ag108_2.values = ag108_2.values - ag110_2_values[0:len(ag108_2.values)]
-ag108_2.PlotWithExpLinearFit("Decay values and linear fit for 108-Ag (series 2)", A108_2, B108_2, 24, 120, False, True)
+ag108_2.PlotWithExpLinearFit("Decay values and linear fit for 108-Ag (series 2)", A108_2, B108_2, 24, 120, False, False)
 
 ###################################################
 # Task 7: Half life
@@ -252,10 +254,10 @@ print("Half life for 110-Ag (series 2): ", np.log(1/2)/(-lambda_110_2))
 ###################################################
 
 
+print("AG SERIES 1: Chi^2 test")
 ag = DecayData(AG_SERIES1_FILENAME, AG_SERIES1_RESOLUTION)
 ag.LoadValues(AG_SERIES1_START_LOAD, AG_SERIES1_STOP_LOAD)
 # Merge channels with dwell time 0.5 sec to channels with dwell time 5 sec
-#print(ag110_1.values)
 ag.MergeBuckets(10)
 
 # we should include bg values in this plot...
@@ -266,7 +268,8 @@ ag.CalculateChi2(n_108_1, lambda108_1, n_110_1, lambda_110_1, bg_mean)
 
 
 
-ag = DecayData(AG_SERIES2_FILENAME, 5)
+print("AG SERIES 2: Chi^2 test")
+ag = DecayData(AG_SERIES2_FILENAME, AG_SERIES2_RESOLUTION)
 ag.LoadValues(AG_SERIES2_START_LOAD, AG_SERIES2_STOP_LOAD)
 
 # we should include bg values in this plot...

@@ -142,14 +142,16 @@ class DecayData(DataFile):
             diff = np.abs(linearvalues[index] - self.values[index])
             diff = (diff * diff) / np.sqrt(self.values[index])
             chi2 = chi2 + diff
-        print("chi2= ", chi2)
+
 
         ndof = len(self.time) - 5
-        print("ndof= ", ndof)
         p = 1 - stats.chi2.cdf(chi2, ndof)
-        print("p= ", p)
 
         chi2tilde = chi2 / ndof
+
+        print("chi2= ", chi2)
+        print("ndof= ", ndof)
+        print("p= ", p)
         print("chi2tilde= ", chi2tilde)
         
 
