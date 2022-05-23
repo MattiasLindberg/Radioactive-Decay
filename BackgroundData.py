@@ -21,6 +21,9 @@ class BackgroundData(DataFile):
         return np.sum(self.values)
     
     def PlotWithPoisson(self):
+        if self.showDiagrams == False: 
+            return
+
         t = self.GroupBy()
         s = [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
 

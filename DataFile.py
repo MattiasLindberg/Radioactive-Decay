@@ -2,12 +2,13 @@ import numpy as np
 
 
 class DataFile(object):
-    def __init__(self, filename, resolution):
+    def __init__(self, filename, resolution, showDiagrams):
         self.filename = filename
         self.file = open(self.filename, "r")
         self.resolution = resolution
         self.values = []
         self.time = []
+        self.showDiagrams = showDiagrams
  
     def LoadValues(self, start, stop):
         count = 0

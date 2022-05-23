@@ -17,7 +17,7 @@ class DecayData(DataFile):
     def CalculatePoissonErrors(self):
         temp = []
         uncertainty = np.sqrt(len(self.values))
-        print("uncertainty= ", uncertainty)
+        #print("uncertainty= ", uncertainty)
         for val in self.values:
             temp.append(uncertainty)
         self.errors= temp
@@ -44,6 +44,9 @@ class DecayData(DataFile):
         self.values = temp
 
     def PlotWithLinearFit(self, title, A, B, start, stop, showerrorsbars, logornot):
+        if self.showDiagrams == False: 
+            return
+
         plt.plot(self.time[start:stop+1], self.values[start:stop+1], "b")
         plt.title(title)
         plt.xlabel("Seconds")
@@ -54,7 +57,7 @@ class DecayData(DataFile):
 
 
         if showerrorsbars == True:
-            print("errors= ", self.errors[start:stop+1])
+            #print("errors= ", self.errors[start:stop+1])
             plt.errorbar(self.time[start:stop+1], self.values[start:stop+1], yerr=self.errors[start:stop+1])
 
         plt.plot(self.time[start:stop+1], A + B*np.array(self.time[start:stop+1]), "r")
@@ -68,6 +71,9 @@ class DecayData(DataFile):
         plt.show()
 
     def PlotWithExpLinearFit(self, title, A, B, start, stop, showerrorsbars, logornot):
+        if self.showDiagrams == False: 
+            return
+
         lambda_1 = -B
         n_1 = np.exp(A)
         print("lambda in plot=", lambda_1)
@@ -111,6 +117,9 @@ class DecayData(DataFile):
         self.values = temp
 
     def PlotMergedDiagram(self, n_108, lambda108, n_110, lambda_110, bg_mean):
+        if self.showDiagrams == False: 
+            return
+
         linearvalues = n_108 * np.exp(-lambda108*self.time)
         plt.plot(self.time, linearvalues, "r")
 
