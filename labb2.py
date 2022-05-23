@@ -15,6 +15,8 @@ from scipy.stats import poisson
 # Constants used when loading measurements
 ###################################################
 
+print("Task 1: Configure measurement files")
+
 BG_SERIES1_START_LOAD = 10
 BG_SERIES1_STOP_LOAD = 1020
 BG_SERIES1_RESOLUTION = 0.5
@@ -42,9 +44,15 @@ AG_SERIES2_FILENAME = ".\\Datafiles\\silver-serie2-5sek.lst"
 
 ShowDiagrams = False
 
+print(" ")
+print("-----------------------------------------------------------------")
+print(" ")
+
 ###################################################
 # Task 2: Plot background noice
 ###################################################
+print("Task 2: Plot background noice with Poisson")
+
 bg1 = BackgroundData(BG_SERIES1_FILENAME, BG_SERIES1_RESOLUTION, ShowDiagrams)
 bg1.LoadValues(BG_SERIES1_START_LOAD, BG_SERIES1_STOP_LOAD)
 bg1.MergeBuckets(AG_SERIES2_RESOLUTION/AG_SERIES1_RESOLUTION) # Merge channels with dwell time 0.5 sec to channels with dwell time 5 sec
@@ -68,10 +76,14 @@ bg4.Merge(bg2)
 # Figure 5
 bg4.PlotWithPoisson()
 
+print(" ")
+print("-----------------------------------------------------------------")
+print(" ")
 
 ###################################################
 # Task 3: Calculate background noice
 ###################################################
+print("Task 3: Count rate for background noice")
 
 # bg4 has all measurements for background noice,
 # so it can be used to calculate the average value
@@ -107,7 +119,7 @@ print(" ")
 ###################################################
 # Task 4: Adjust decay speed for Ag
 ###################################################
-print("Task 4")
+print("Task 4: Count rate for Ag decay")
 
 print("AG SERIES 1")
 ag108_1 = DecayData(AG_SERIES1_FILENAME, AG_SERIES1_RESOLUTION, ShowDiagrams)
@@ -139,7 +151,7 @@ print(" ")
 # Task 5: Plot Ag decay and determine constants 
 # for 108-Ag decay
 ###################################################
-print("Task 5")
+print("Task 5: Determine 108-Ag decay")
 
 print("AG SERIES 1")
 ag108_1.ScaleByLn()
@@ -186,7 +198,7 @@ print(" ")
 # Task 6: Plot Ag decay and determine constants 
 # for 110-Ag decay
 ###################################################
-print("Task 6")
+print("Task 6: Determine 110-Ag decay")
 
 print("AG SERIES 1")
 
@@ -269,8 +281,9 @@ print(" ")
 # Task 8: Chi^2 test
 ###################################################
 
+print("Task 8: Chi^2 test")
 
-print("AG SERIES 1: Chi^2 test")
+print("AG SERIES 1")
 ag = DecayData(AG_SERIES1_FILENAME, AG_SERIES1_RESOLUTION, ShowDiagrams)
 ag.LoadValues(AG_SERIES1_START_LOAD, AG_SERIES1_STOP_LOAD)
 # Merge channels with dwell time 0.5 sec to channels with dwell time 5 sec
