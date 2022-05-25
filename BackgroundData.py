@@ -15,7 +15,7 @@ class BackgroundData(DataFile):
         return t
 
     def GetTotalTime(self):
-        return self.resolution * len(self.time)
+        return self.dwelltime * len(self.time)
 
     def GetTotalCount(self):
         return np.sum(self.values)

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>90958437-c5f0-4657-bcc9-5e982b14300f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>labb2.py</StartupFile>
+    <StartupFile>analysis.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -26,7 +26,7 @@
     <Compile Include="DecayData.py" />
     <Compile Include="BackgroundData.py" />
     <Compile Include="DataFile.py" />
-    <Compile Include="labb2.py" />
+    <Compile Include="analysis.py" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">

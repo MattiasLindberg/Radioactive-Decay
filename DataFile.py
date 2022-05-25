@@ -2,10 +2,10 @@ import numpy as np
 
 
 class DataFile(object):
-    def __init__(self, filename, resolution, showDiagrams):
+    def __init__(self, filename, dwelltime, showDiagrams):
         self.filename = filename
         self.file = open(self.filename, "r")
-        self.resolution = resolution
+        self.dwelltime = dwelltime
         self.values = []
         self.time = []
         self.showDiagrams = showDiagrams
@@ -17,7 +17,7 @@ class DataFile(object):
                 values = line.split()
                 self.values.append(int(values[1]))
             count = count + 1
-        self.time = np.arange(0, self.resolution * len(self.values), self.resolution)
+        self.time = np.arange(0, self.dwelltime * len(self.values), self.dwelltime)
 
 
     def Length(self):
@@ -29,7 +29,7 @@ class DataFile(object):
     def StandardDeviation(self):
         return np.std(self.values)
     
-    def MergeBuckets(self, mergeCount):
+    def MergeChannels(self, mergeCount):
         temp = []
         i = 0
         counter = 0
@@ -41,12 +41,12 @@ class DataFile(object):
                 i = 0
                 counter = 0
 
-        self.resolution = int(mergeCount * self.resolution)
+        self.dwelltime = int(mergeCount * self.dwelltime)
         self.values = temp
-        self.time = np.linspace(start=0, stop=self.resolution * len(self.values), num=len(self.values))
+        self.time = np.linspace(start=0, stop=self.dwelltime * len(self.values), num=len(self.values))
 
     def Merge(self, otherDataFile):
         for value in otherDataFile.values:
             self.values.append(value)
-        self.time = np.arange(0, self.resolution * len(self.values), self.resolution)
+        self.time = np.arange(0, self.dwelltime * len(self.values), self.dwelltime)
 
