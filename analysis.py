@@ -157,18 +157,16 @@ print(" ")
 ###################################################
 print("Task 4: Count rate for Ag decay")
 
-ag108_2 = DecayData(AG_FILENAME, AG_DWELLTIME, ShowDiagrams_ag)
-ag108_2.LoadValues(AG_START_LOAD, AG_STOP_LOAD)
+ag108 = DecayData(AG_FILENAME, AG_DWELLTIME, ShowDiagrams_ag)
+ag108.LoadValues(AG_START_LOAD, AG_STOP_LOAD)
 if AG_MERGECHANNELS == True:
-    ag108_2.MergeChannels(10)
-ag108_2.CalculateCountRateAndErrors()
-print(ag108_2.values)
-ag108_2.AdjustWithFixedValuePerSec(bg_mean, uncertainty_4)
-###ag108_2.CalculatePoissonErrors()
-#ag108_2.Plot("xxx", False)
+    ag108.MergeChannels(10)
+ag108.CalculateCountRateAndErrors()
+print(ag108.values)
+ag108.AdjustWithFixedValuePerSec(bg_mean, uncertainty_4)
 
-print("Ag count rate adjusted for background noice (events/sec): ", ag108_2.values[0:5])
-print("Uncertaintiy for Ag count rate adjusted for background noice (events/sec): ", ag108_2.errors[0:5])
+print("Ag count rate adjusted for background noice (events/sec): ", ag108.values[0:5])
+print("Uncertaintiy for Ag count rate adjusted for background noice (events/sec): ", ag108.errors[0:5])
 
 print(" ")
 print("-----------------------------------------------------------------")
@@ -180,23 +178,23 @@ print(" ")
 ###################################################
 print("Task 5: Determine 108-Ag decay")
 
-ag108_2.ScaleByLn()
+ag108.ScaleByLn()
 
-A108_2, B108_2 = AnalyserHelper.LeastSquareFit(ag108_2, AG_AG108_START_FITTING, AG_AG108_STOP_FITTING)
-lambda108_2 = -B108_2
-n_108_2 = np.exp(A108_2)
-print("lambda108_2= ", lambda108_2)
-print("n_108_2= ", n_108_2)
+A108, B108 = AnalyserHelper.LeastSquareFit(ag108, AG_AG108_START_FITTING, AG_AG108_STOP_FITTING)
+lambda108 = -B108
+n_108 = np.exp(A108)
+print("lambda108= ", lambda108)
+print("n_108= ", n_108)
 
 # Figure 6
-ag108_2.PlotWithLinearFit("Decay logarithmic values and linear fit for 108-Ag", A108_2, B108_2, AG_AG108_START_FITTING, AG_AG108_STOP_FITTING, True, True)
+ag108.PlotWithLinearFit("Decay logarithmic values and linear fit for 108-Ag", A108, B108, AG_AG108_START_FITTING, AG_AG108_STOP_FITTING, True, True)
 
-ag108_2.ScaleByExp()
-ag108_2.CalculatePoissonErrors()
-#ag108_2.PlotWithExpLinearFit("Decay values and linear fit for 108-Ag", A108_2, B108_2, 24, 120, False, False)
+ag108.ScaleByExp()
+ag108.CalculatePoissonErrors()
+#ag108.PlotWithExpLinearFit("Decay values and linear fit for 108-Ag", A108, B108, 24, 120, False, False)
 
-ag108_values_2 = n_108_2 * np.exp(-lambda108_2*ag108_2.time)
-#print("108-Ag decay values (series 2) to be corrected for in task 6: ", ag108_values_2)
+ag108_values = n_108 * np.exp(-lambda108*ag108.time)
+#print("108-Ag decay values (series 2) to be corrected for in task 6: ", ag108_values)
 
 print(" ")
 print("-----------------------------------------------------------------")
@@ -208,33 +206,33 @@ print(" ")
 ###################################################
 print("Task 6: Determine 110-Ag decay")
 
-ag110_2 = DecayData(AG_FILENAME, AG_DWELLTIME, ShowDiagrams_ag)
-ag110_2.LoadValues(AG_START_LOAD, AG_STOP_LOAD)
+ag110 = DecayData(AG_FILENAME, AG_DWELLTIME, ShowDiagrams_ag)
+ag110.LoadValues(AG_START_LOAD, AG_STOP_LOAD)
 if AG_MERGECHANNELS == True:
-    ag110_2.MergeChannels(10)
-ag110_2.CalculateCountRateAndErrors()
-ag110_2.AdjustWithFixedValuePerSec(bg_mean, uncertainty_4)
-ag110_2.values = ag110_2.values - ag108_values_2[0:len(ag110_2.values)]
-print("110-Ag decay values to be added to table: ", ag110_2.values[0:10])
-ag110_2.CalculatePoissonErrors()
-ag110_2.ScaleByLn()
-# ag110_2.AdjustForDecay(A, B)
-A110_2, B110_2 = AnalyserHelper.LeastSquareFit(ag110_2, AG_AG110_START_FITTING, AG_AG110_STOP_FITTING)
-lambda_110_2 = -B110_2
-n_110_2 = np.exp(A110_2)
-print("lambda_110_2= ", lambda_110_2)
-print("n_110_2= ", n_110_2)
+    ag110.MergeChannels(10)
+ag110.CalculateCountRateAndErrors()
+ag110.AdjustWithFixedValuePerSec(bg_mean, uncertainty_4)
+ag110.values = ag110.values - ag108_values[0:len(ag110.values)]
+print("110-Ag decay values to be added to table: ", ag110.values[0:10])
+ag110.CalculatePoissonErrors()
+ag110.ScaleByLn()
 
-ag110_2.PlotWithLinearFit("Decay values and linear fit for 110-Ag", A110_2, B110_2, AG_AG110_START_FITTING, AG_AG110_STOP_FITTING, True, False)
+A110, B110 = AnalyserHelper.LeastSquareFit(ag110, AG_AG110_START_FITTING, AG_AG110_STOP_FITTING)
+lambda_110 = -B110
+n_110 = np.exp(A110)
+print("lambda_110= ", lambda_110)
+print("n_110= ", n_110)
 
-ag110_2.ScaleByExp()
-ag110_2.CalculatePoissonErrors()
-ag110_2.PlotWithExpLinearFit("Decay values and liner fit for 110-Ag", A110_2, B110_2, AG_AG110_START_FITTING, AG_AG110_STOP_FITTING, False, True)
+ag110.PlotWithLinearFit("Decay values and linear fit for 110-Ag", A110, B110, AG_AG110_START_FITTING, AG_AG110_STOP_FITTING, True, False)
+
+ag110.ScaleByExp()
+ag110.CalculatePoissonErrors()
+ag110.PlotWithExpLinearFit("Decay values and liner fit for 110-Ag", A110, B110, AG_AG110_START_FITTING, AG_AG110_STOP_FITTING, False, True)
 
 
-ag110_2_values = n_110_2 * np.exp(-lambda_110_2*ag108_2.time)
-ag108_2.values = ag108_2.values - ag110_2_values[0:len(ag108_2.values)]
-ag108_2.PlotWithExpLinearFit("Decay values and linear fit for 108-Ag", A108_2, B108_2, AG_AG110_START_FITTING, AG_AG110_STOP_FITTING, False, False)
+ag110_values = n_110 * np.exp(-lambda_110*ag108.time)
+ag108.values = ag108.values - ag110_values[0:len(ag108.values)]
+ag110.PlotWithExpLinearFit("Decay values and linear fit for 108-Ag", A108, B108, AG_AG110_START_FITTING, AG_AG110_STOP_FITTING, False, False)
 
 print(" ")
 print("-----------------------------------------------------------------")
@@ -245,8 +243,8 @@ print(" ")
 ###################################################
 print("Task 7: Half life")
 
-print("Half life for 108-Ag: ", np.log(1/2)/(-lambda108_2))
-print("Half life for 110-Ag: ", np.log(1/2)/(-lambda_110_2))
+print("Half life for 108-Ag: ", np.log(1/2)/(-lambda108))
+print("Half life for 110-Ag: ", np.log(1/2)/(-lambda_110))
 
 print(" ")
 print("-----------------------------------------------------------------")
@@ -263,11 +261,11 @@ ag.LoadValues(AG_START_LOAD, AG_STOP_LOAD)
 if AG_MERGECHANNELS == True:
     ag.MergeChannels(10)
 
-ag.PlotMergedDiagram(n_108_2, lambda108_2, n_110_2, lambda_110_2, bg_mean)
+ag.PlotMergedDiagram(n_108, lambda108, n_110, lambda_110, bg_mean)
 
 print(ag.values)
 print(len(ag.values))
-ag.CalculateChi2(n_108_2, lambda108_2, n_110_2, lambda_110_2, bg_mean, len(ag.values))
+ag.CalculateChi2(n_108, lambda108, n_110, lambda_110, bg_mean, len(ag.values))
 
 
 print(" ")
@@ -281,21 +279,19 @@ print(" ")
 print("Interval testing")
 
 
-ag_2 = DecayData(AG_FILENAME, AG_DWELLTIME, True)
-ag_2.LoadValues(AG_START_LOAD, AG_STOP_LOAD)
+ag_intervals = DecayData(AG_FILENAME, AG_DWELLTIME, True)
+ag_intervals.LoadValues(AG_START_LOAD, AG_STOP_LOAD)
 if AG_MERGECHANNELS == True:
-    ag_2.MergeChannels(10)
-#ag_2.CalculateCountRateAndErrors()
-ag_2.CalculatePoissonErrors()
-#ag_2.AdjustWithFixedValuePerSec(bg_mean, uncertainty_4)
-ag_2.ScaleByLn()
+    ag_intervals.MergeChannels(10)
+ag_intervals.CalculatePoissonErrors()
+ag_intervals.ScaleByLn()
 
 
-plt.scatter(ag_2.time, ag_2.values, s=10)
-plt.axvline(x=ag_2.time[AG_AG108_START_FITTING], color='red', ls='--', lw='2')
-plt.axvline(x=ag_2.time[AG_AG108_STOP_FITTING], color='red', ls='--', lw='2')
-plt.axvline(x=ag_2.time[AG_AG110_START_FITTING], color='green', ls='--', lw='2')
-plt.axvline(x=ag_2.time[AG_AG110_STOP_FITTING], color='green', ls='--', lw='2')
+plt.scatter(ag_intervals.time, ag_intervals.values, s=10)
+plt.axvline(x=ag_intervals.time[AG_AG108_START_FITTING], color='red', ls='--', lw='2')
+plt.axvline(x=ag_intervals.time[AG_AG108_STOP_FITTING], color='red', ls='--', lw='2')
+plt.axvline(x=ag_intervals.time[AG_AG110_START_FITTING], color='green', ls='--', lw='2')
+plt.axvline(x=ag_intervals.time[AG_AG110_STOP_FITTING], color='green', ls='--', lw='2')
 
 plt.ylabel("Detected events per channel (log)")
 plt.xlabel("Time (s)")

@@ -32,24 +32,12 @@ class DecayData(DataFile):
     def CalculatePoissonErrors(self):
         temp = []
         uncertainty = np.sqrt(len(self.values))
-        #print("uncertainty= ", uncertainty)
         for val in self.values:
             temp.append(uncertainty)
         self.errors= temp
-        #self.errors = np.sqrt(np.abs(self.values))
 
     def ScaleByLn(self):
-        #temp = []
-        #for val in self.values:
-        #    logval = np.log(val)
-        #    temp.append(logval)
-        #self.values = temp
         self.values = np.log(np.abs(self.values))
-
-        #temperrors = []
-        #for val in self.errors:
-        #    temperrors.append(np.log(val))
-        #self.errors = temperrors
         self.errors = np.sqrt(np.abs(self.values))
 
     def ScaleByExp(self):
@@ -86,7 +74,6 @@ class DecayData(DataFile):
 
 
         if showerrorsbars == True:
-            #print("errors= ", self.errors[start:stop])
             plt.errorbar(self.time[start:stop], self.values[start:stop], yerr=self.errors[start:stop], linestyle='None', capsize=4)
 
         plt.plot(self.time[start:stop], A + B*np.array(self.time[start:stop]), "r")
@@ -107,7 +94,6 @@ class DecayData(DataFile):
         n_1 = np.exp(A)
         print("lambda in plot=", lambda_1)
         print("n in plot=", n_1)
-        # linearvalues = n_1 * np.exp(-lambda_1*self.time[start:stop])
         linearvalues = n_1 * np.exp(-lambda_1*self.time)
 
         #print("lambda= ", lambda_1)
@@ -164,8 +150,6 @@ class DecayData(DataFile):
         plt.ylabel("Events detected")
         plt.title("Ag decay values with fitted lines for 108-Ag and 110-Ag decay")
 
-        # plt.plot(self.time[start:stop], linearvalues, "r")
-
         colors = {'Events Detected per 5 second interval':'blue', 'Ag-108 decay least square fit':'red', 'Ag-110 decay least square fit':'green', 'Ag-108 and Ag-110 decays combined':'m' }
         labels = list(colors.keys())
         handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
@@ -188,7 +172,6 @@ class DecayData(DataFile):
             diff = (diff * diff) / np.sqrt(model_persecond)
             #print("index= ", index, ", diff= ", diff, ", measurement_persec= ", measurement_persecond, ", model_persec= ", model_persecond, ", measured value=", self.values[index])
             chi2 = chi2 + diff
-            # (measurement - model)^2/sqrt(model)
 
         ndof = endposition - 4
         p = 1 - stats.chi2.cdf(chi2, ndof)
