@@ -19,4 +19,21 @@ class AnalyserHelper(object):
         A = ( (sumX2*sumY) - (sumX*sumXY) ) / delta
         B = ( (N*sumXY) - (sumX*sumY) ) / delta
 
-        return A, B
+        sumofdifferencesquared = 0
+        for index in range(0, len(x)):
+          temp = np.power(y[index] - A - B*x[index], 2)
+          #print("temp= ", temp)
+          sumofdifferencesquared = sumofdifferencesquared  + temp
+
+        #print("sumofdifferencesquared= ", sumofdifferencesquared)
+        #print("N= ", N)
+
+        sigma_y = np.sqrt(sumofdifferencesquared/(N-2))
+        sigma_A = sigma_y * np.sqrt(sumX2/delta)
+        sigma_B = sigma_y * np.sqrt(N/delta)
+
+        #print("sigma_y= ", sigma_y)
+        #print("sigma_A= ", sigma_A)
+        #print("sigma_B= ", sigma_B)
+
+        return A, B, sigma_y, sigma_A, sigma_B

@@ -74,7 +74,7 @@ AG_AG110_START_FITTING = AG_SERIES2_AG110_START_FITTING
 AG_AG110_STOP_FITTING = AG_SERIES2_AG110_STOP_FITTING
 
 ShowDiagrams_bg = False
-ShowDiagrams_ag = True
+ShowDiagrams_ag = False
 
 print(" ")
 print("-----------------------------------------------------------------")
@@ -180,11 +180,24 @@ print("Task 5: Determine 108-Ag decay")
 
 ag108.ScaleByLn()
 
-A108, B108 = AnalyserHelper.LeastSquareFit(ag108, AG_AG108_START_FITTING, AG_AG108_STOP_FITTING)
+A108, B108, sigma_y, sigma_A, sigma_B = AnalyserHelper.LeastSquareFit(ag108, AG_AG108_START_FITTING, AG_AG108_STOP_FITTING)
+
+print("A108= ", A108)
+print("B108= ", B108)
+print("sigma_y= ", sigma_y)
+print("sigma_A= ", sigma_A)
+print("sigma_B= ", sigma_B)
+print("---------")
+
 lambda108 = -B108
 n_108 = np.exp(A108)
+sigma_lambda108 = sigma_B
+sigma_n_108 = np.exp(sigma_A)
 print("lambda108= ", lambda108)
 print("n_108= ", n_108)
+print("sigma_lambda108= ", sigma_lambda108)
+print("sigma_n_108= ", sigma_n_108)
+
 
 # Figure 6
 ag108.PlotWithLinearFit("Decay logarithmic values and linear fit for 108-Ag", A108, B108, AG_AG108_START_FITTING, AG_AG108_STOP_FITTING, True, True)
@@ -212,16 +225,31 @@ if AG_MERGECHANNELS == True:
     ag110.MergeChannels(10)
 ag110.CalculateCountRateAndErrors()
 ag110.AdjustWithFixedValuePerSec(bg_mean, uncertainty_4)
+print("Ag decay values to be added to table: ", ag110.values[0:5])
+print("108-Ag decay values to be added to table: ", ag108_values[0:5])
 ag110.values = ag110.values - ag108_values[0:len(ag110.values)]
-print("110-Ag decay values to be added to table: ", ag110.values[0:10])
+print("110-Ag decay values to be added to table: ", ag110.values[0:5])
 ag110.CalculatePoissonErrors()
+
 ag110.ScaleByLn()
 
-A110, B110 = AnalyserHelper.LeastSquareFit(ag110, AG_AG110_START_FITTING, AG_AG110_STOP_FITTING)
+A110, B110, sigma_y, sigma_A, sigma_B = AnalyserHelper.LeastSquareFit(ag110, AG_AG110_START_FITTING, AG_AG110_STOP_FITTING)
+
+print("A110= ", A110)
+print("B110= ", B110)
+print("sigma_y= ", sigma_y)
+print("sigma_A= ", sigma_A)
+print("sigma_B= ", sigma_B)
+print("---------")
+
 lambda_110 = -B110
 n_110 = np.exp(A110)
+sigma_lambda110 = sigma_B
+sigma_n_110 = np.exp(sigma_A)
 print("lambda_110= ", lambda_110)
 print("n_110= ", n_110)
+print("sigma_lambda110= ", sigma_lambda110)
+print("sigma_n_110= ", sigma_n_110)
 
 ag110.PlotWithLinearFit("Decay values and linear fit for 110-Ag", A110, B110, AG_AG110_START_FITTING, AG_AG110_STOP_FITTING, True, False)
 
@@ -244,7 +272,12 @@ print(" ")
 print("Task 7: Half life")
 
 print("Half life for 108-Ag: ", np.log(1/2)/(-lambda108))
+print("Max half-life: ", np.log(1/2)/(-lambda108+sigma_lambda108))
+print("Min half-life: ", np.log(1/2)/(-lambda108-sigma_lambda108))
+
 print("Half life for 110-Ag: ", np.log(1/2)/(-lambda_110))
+print("Max half-life: ", np.log(1/2)/(-lambda_110+sigma_lambda110))
+print("Min half-life: ", np.log(1/2)/(-lambda_110-sigma_lambda110))
 
 print(" ")
 print("-----------------------------------------------------------------")
@@ -278,7 +311,6 @@ print(" ")
 
 print("Interval testing")
 
-
 ag_intervals = DecayData(AG_FILENAME, AG_DWELLTIME, True)
 ag_intervals.LoadValues(AG_START_LOAD, AG_STOP_LOAD)
 if AG_MERGECHANNELS == True:
@@ -303,5 +335,5 @@ handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
 plt.legend(handles, labels)
 plt.grid(True)
 
-plt.show()
+#plt.show()
 
