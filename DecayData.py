@@ -32,16 +32,12 @@ class DecayData(DataFile):
     def CalculatePoissonErrors(self):
         temp = []
         uncertainty = np.sqrt(np.abs(self.values)) / self.dwelltime
-        #print("u= ", uncertainty)
-        #for val in self.values:
-        #    temp.append(uncertainty)
         self.errors= uncertainty
 
     def ScaleByLn(self):
         self.errors = np.log(np.sqrt(np.abs(self.values)) / self.dwelltime)
 
         self.values = np.log(np.abs(self.values))
-        #self.errors = np.sqrt(np.abs(self.values))
 
     def ScaleByExp(self):
         temp = []

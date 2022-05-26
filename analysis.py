@@ -73,8 +73,8 @@ AG_AG108_STOP_FITTING = AG_SERIES2_AG108_STOP_FITTING
 AG_AG110_START_FITTING = AG_SERIES2_AG110_START_FITTING
 AG_AG110_STOP_FITTING = AG_SERIES2_AG110_STOP_FITTING
 
-ShowDiagrams_bg = False
-ShowDiagrams_ag = False
+ShowDiagrams_bg = True
+ShowDiagrams_ag = True
 
 print(" ")
 print("-----------------------------------------------------------------")
